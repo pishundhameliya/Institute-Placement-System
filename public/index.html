@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Institute Placement System</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Firebase Compat SDK (Auth + Firestore only, NO Storage) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500/30">
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950 to-indigo-950/30"></div>
+    <div class="absolute inset-0 opacity-[0.15] bg-grid"></div>
+    <!-- Decorative Orbs -->
+    <div class="absolute -top-[10%] -right-[10%] h-[40%] w-[40%] rounded-full blur-[120px] bg-indigo-500/10 animate-pulse"></div>
+    <div class="absolute top-[20%] -left-[10%] h-[30%] w-[30%] rounded-full blur-[100px] bg-fuchsia-500/5"></div>
+    <div class="absolute -bottom-[10%] left-[20%] h-[40%] w-[40%] rounded-full blur-[120px] bg-cyan-500/5"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-white/5 bg-slate-950/40 backdrop-blur-xl">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-20 items-center justify-between gap-4">
+        <a href="#/home" class="flex items-center gap-4 group">
+          <div class="h-11 w-11 rounded-2xl bg-gradient-to-br from-indigo-500 to-fuchsia-500 p-[1.5px] transition-transform duration-500 group-hover:rotate-12">
+            <div class="h-full w-full rounded-[0.9rem] bg-slate-950 flex items-center justify-center shadow-inner">
+              <span class="text-base font-black tracking-tighter text-white">IPS</span>
+            </div>
+          </div>
+          <div class="leading-tight hidden sm:block">
+            <div class="text-base font-bold tracking-tight text-white group-hover:text-indigo-200 transition-colors">Institute Placement System</div>
+            <div class="text-[10px] uppercase tracking-widest font-bold text-slate-500">Elite Talent Connect</div>
+          </div>
+        </a>
+
+        <nav id="topNav" class="hidden md:flex items-center gap-1.5 p-1 rounded-2xl bg-white/5 border border-white/5"></nav>
+
+        <div class="flex items-center gap-3">
+          <div id="notifWrap" class="relative"></div>
+          <div id="userMenuWrap" class="relative"></div>
+          <button id="mobileMenuBtn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white transition-all">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div id="mobileNav" class="md:hidden hidden py-4 border-t border-white/5 animate-fade-in"></div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <div id="app" class="min-h-[65vh]"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 mt-12">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="text-sm text-slate-400">© 2024 Institute Placement System. All rights reserved.</div>
+        <div class="flex gap-4 text-sm text-slate-400">
+          <a href="#/about" class="hover:text-slate-200">About</a>
+          <a href="#/contact" class="hover:text-slate-200">Contact</a>
+          <a href="#/privacy" class="hover:text-slate-200">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toasts -->
+  <div id="toastHost" class="fixed bottom-4 right-4 z-50 flex w-[min(420px,calc(100vw-2rem))] flex-col gap-2"></div>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 z-50 hidden">
+    <div id="modalBackdrop" class="absolute inset-0 bg-black/60"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="card w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-950/80 backdrop-blur">
+        <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <div>
+            <h3 id="modalTitle" class="text-lg font-semibold">Modal</h3>
+            <p id="modalSubtitle" class="text-xs text-slate-300/80"></p>
+          </div>
+          <button id="modalClose" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Close</button>
+        </div>
+        <div id="modalBody" class="p-5 max-h-[70vh] overflow-auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+    <div class="text-center">
+      <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
+      <div class="mt-4 text-sm text-slate-300" id="loadingText">Connecting to server...</div>
+    </div>
+  </div>
+
+  <script src="firebase-config.js?v=20260410-2"></script>
+  <script src="script.js?v=20260410-2"></script>
+</body>
+</html>
