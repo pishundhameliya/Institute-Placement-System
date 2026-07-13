@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection
+    match /users/{userId} {
+      // Anyone can read user profiles (needed for public job listings)
+      allow read, write: if true;
+    }
+    
+    // Jobs collection
+    match /jobs/{jobId} {
+      // Anyone can read jobs (public listing)
+      allow read: if true;
+      // Only authenticated users can create jobs
+      allow create: if request.auth != null;
+      // Only the job owner or faculty members (for approvals) can update jobs; only the owner can delete
+      allow update: if request.auth != null && (
+        request.auth.uid == resource.data.employerId ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'faculty'
+      );
+      allow delete: if request.auth != null && request.auth.uid == resource.data.employerId;
+    }
+    
+    // Applications collection
+    match /applications/{appId} {
+      // Authenticated users can read all applications
+      allow read: if request.auth != null;
+      // Authenticated users can create applications
+      allow create: if request.auth != null;
+      // Application owner (student) or job owner (employer) can update/delete
+      allow update, delete: if request.auth != null;
+    }
+    
+    // Notifications collection
+    match /notifications/{notifId} {
+      // Users can only read their own notifications
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      // Authenticated users can create notifications (for sending to others)
+      allow create: if request.auth != null;
+      // Users can only update their own notifications (mark as read)
+      allow update: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+  }
+}

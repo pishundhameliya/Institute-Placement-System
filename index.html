@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Institute Placement System</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950 to-indigo-950"></div>
+    <div class="absolute inset-0 opacity-70 bg-grid"></div>
+    <div class="absolute -top-24 -right-24 h-80 w-80 rounded-full blur-3xl bg-indigo-500/20"></div>
+    <div class="absolute -bottom-24 -left-24 h-80 w-80 rounded-full blur-3xl bg-fuchsia-500/15"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-slate-950/60 backdrop-blur">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between gap-3">
+        <a href="#/home" class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-fuchsia-500 p-[1px]">
+            <div class="h-full w-full rounded-xl bg-slate-950 flex items-center justify-center">
+              <span class="text-sm font-bold text-indigo-300">IPS</span>
+            </div>
+          </div>
+          <div class="leading-tight">
+            <div class="text-sm font-semibold">Institute Placement System</div>
+            <div class="text-[11px] text-slate-300/80">Students • Company Member • Faculty</div>
+          </div>
+        </a>
+
+        <nav id="topNav" class="hidden md:flex items-center gap-1"></nav>
+
+        <div class="flex items-center gap-2">
+          <div id="notifWrap" class="relative"></div>
+          <div id="userMenuWrap" class="relative"></div>
+          <button id="mobileMenuBtn" class="md:hidden inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Menu</button>
+        </div>
+      </div>
+      <div id="mobileNav" class="md:hidden hidden pb-3"></div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <div id="app" class="min-h-[65vh]"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 mt-12">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="text-sm text-slate-400">© 2024 Institute Placement System. All rights reserved.</div>
+        <div class="flex gap-4 text-sm text-slate-400">
+          <a href="#/about" class="hover:text-slate-200">About</a>
+          <a href="#/contact" class="hover:text-slate-200">Contact</a>
+          <a href="#/privacy" class="hover:text-slate-200">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toasts -->
+  <div id="toastHost" class="fixed bottom-4 right-4 z-50 flex w-[min(420px,calc(100vw-2rem))] flex-col gap-2"></div>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 z-50 hidden">
+    <div id="modalBackdrop" class="absolute inset-0 bg-black/60"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="card w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-950/80 backdrop-blur">
+        <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <div>
+            <h3 id="modalTitle" class="text-lg font-semibold">Modal</h3>
+            <p id="modalSubtitle" class="text-xs text-slate-300/80"></p>
+          </div>
+          <button id="modalClose" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Close</button>
+        </div>
+        <div id="modalBody" class="p-5"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="public/firebase-config.js"></script>
+  <script src="public/script.js"></script>
+</body>
+</html>
